@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = (ListView) findViewById(R.id.listView);
-        notes.add("Invat sa fac aplicatii in care scriu notite");
-        notes.add("Tu cf?");
         arrayAdapter= new ArrayAdapter(this, android.R.layout.simple_list_item_1,notes);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,13 +54,29 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-       /* Button addNoteButton = findViewById(R.id.addNoteButton);
-        addNoteButton.setOnClickListener(new View.OnClickListener() {
+       Button addNoteButton = findViewById(R.id.addNoteButton);
+        addNoteButton.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NoteEditorActivity.class);
                 startActivity(intent);
             }
-        });*/
+        });
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                int noteId = data.getIntExtra("noteId", -1);
+                String updatedNote = data.getStringExtra("updatedNote");
+
+                if (noteId != -1 && updatedNote != null) {
+                    MainActivity.notes.set(noteId, updatedNote);
+                    MainActivity.arrayAdapter.notifyDataSetChanged();
+                }
+            }
+        }
     }
 }
