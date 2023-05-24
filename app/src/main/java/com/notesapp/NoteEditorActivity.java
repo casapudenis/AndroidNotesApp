@@ -2,11 +2,15 @@ package com.notesapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.content.Intent;
+
+import java.util.HashSet;
 
 public class NoteEditorActivity extends AppCompatActivity {
     private int noteId = -1;
@@ -31,11 +35,17 @@ public class NoteEditorActivity extends AppCompatActivity {
                 if (noteId != -1) {
                     MainActivity.notes.set(noteId, String.valueOf(s));
                     MainActivity.arrayAdapter.notifyDataSetChanged();
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.notesapp", Context.MODE_PRIVATE);
+                    HashSet<String> set = new HashSet<>(MainActivity.notes);
+                    sharedPreferences.edit().putStringSet("notes",set).apply();
                 } else {
                     String newNote = String.valueOf(s);
                     MainActivity.notes.add(newNote);
                     noteId = MainActivity.notes.size() - 1;
                     MainActivity.arrayAdapter.notifyDataSetChanged();
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.notesapp", Context.MODE_PRIVATE);
+                    HashSet<String> set = new HashSet<>(MainActivity.notes);
+                    sharedPreferences.edit().putStringSet("notes",set).apply();
                 }
             }
 
